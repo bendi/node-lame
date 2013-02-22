@@ -303,6 +303,23 @@ void node_mpg123_id3_async (uv_work_t *req) {
   );
 }
 
+    Handle<Value> node_mpg123_volume(const Arguments& args) {
+        UNWRAP_MH;
+        
+        float volume = args[1]->NumberValue();
+        mpg123_volume(mh, volume/100);
+        return Undefined();
+    }
+    
+    Handle<Value> node_mpg123_get_volume(const Arguments& args) {
+        UNWRAP_MH;
+        
+        double v;
+        mpg123_getvolume(mh, &v, NULL, NULL);
+        return scope.Close(Number::New(v*100));
+    }
+    
+
 void node_mpg123_id3_after (uv_work_t *req) {
   HandleScope scope;
   id3_req *ireq = (id3_req *)req->data;
@@ -393,7 +410,7 @@ void node_mpg123_id3_after (uv_work_t *req) {
     FatalException(try_catch);
   }
 }
-
+    
 
 void InitMPG123(Handle<Object> target) {
   HandleScope scope;
@@ -503,6 +520,9 @@ void InitMPG123(Handle<Object> target) {
   NODE_SET_METHOD(target, "mpg123_feed", node_mpg123_feed);
   NODE_SET_METHOD(target, "mpg123_read", node_mpg123_read);
   NODE_SET_METHOD(target, "mpg123_id3", node_mpg123_id3);
+    
+    NODE_SET_METHOD(target, "mpg123_volume", node_mpg123_volume);
+    NODE_SET_METHOD(target, "mpg123_get_volume", node_mpg123_get_volume);
 }
 
 } // nodelame namespace
