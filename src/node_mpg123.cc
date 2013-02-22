@@ -412,6 +412,22 @@ void node_mpg123_id3_after (uv_work_t *req) {
 }
     
 
+    Handle<Value> node_mpg123_timeframe (const Arguments& args) {
+        UNWRAP_MH;
+        
+        double secs = args[1]->NumberValue();
+        
+        return scope.Close(Number::New(mpg123_timeframe(mh, secs)));
+    }
+    
+    Handle<Value> node_mpg123_set_frame (const Arguments& args) {
+        UNWRAP_MH;
+        
+        off_t offset = args[1]->NumberValue();
+        
+        return scope.Close(Number::New(mpg123_seek_frame(mh, offset, SEEK_SET)));
+    }
+
 void InitMPG123(Handle<Object> target) {
   HandleScope scope;
 
@@ -523,6 +539,11 @@ void InitMPG123(Handle<Object> target) {
     
     NODE_SET_METHOD(target, "mpg123_volume", node_mpg123_volume);
     NODE_SET_METHOD(target, "mpg123_get_volume", node_mpg123_get_volume);
+    
+    NODE_SET_METHOD(target, "mpg123_timeframe", node_mpg123_timeframe);
+    
+    NODE_SET_METHOD(target, "mpg123_set_frame", node_mpg123_set_frame);
+
 }
 
 } // nodelame namespace
