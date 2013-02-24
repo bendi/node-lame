@@ -19,6 +19,7 @@
 #include <node_buffer.h>
 #include "node_pointer.h"
 #include "node_mpg123.h"
+#include <cmath>
 
 using namespace v8;
 using namespace node;
@@ -303,7 +304,7 @@ void node_mpg123_id3_async (uv_work_t *req) {
   );
 }
 
-    Handle<Value> node_mpg123_volume(const Arguments& args) {
+    Handle<Value> node_mpg123_set_volume(const Arguments& args) {
         UNWRAP_MH;
         
         float volume = args[1]->NumberValue();
@@ -316,7 +317,7 @@ void node_mpg123_id3_async (uv_work_t *req) {
         
         double v;
         mpg123_getvolume(mh, &v, NULL, NULL);
-        return scope.Close(Number::New(v*100));
+        return scope.Close(Number::New(round(v*100)));
     }
     
 
@@ -537,7 +538,7 @@ void InitMPG123(Handle<Object> target) {
   NODE_SET_METHOD(target, "mpg123_read", node_mpg123_read);
   NODE_SET_METHOD(target, "mpg123_id3", node_mpg123_id3);
     
-    NODE_SET_METHOD(target, "mpg123_volume", node_mpg123_volume);
+    NODE_SET_METHOD(target, "mpg123_set_volume", node_mpg123_set_volume);
     NODE_SET_METHOD(target, "mpg123_get_volume", node_mpg123_get_volume);
     
     NODE_SET_METHOD(target, "mpg123_timeframe", node_mpg123_timeframe);
