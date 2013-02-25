@@ -317,7 +317,7 @@ void node_mpg123_id3_async (uv_work_t *req) {
         
         double v;
         mpg123_getvolume(mh, &v, NULL, NULL);
-        return scope.Close(Number::New(round(v*100)));
+        return scope.Close(Number::New(v*100));
     }
     
 
